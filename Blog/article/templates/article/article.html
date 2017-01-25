@@ -1,0 +1,89 @@
+{% extends "loyout.html" %}
+{% load staticfiles %}
+{% block "title" %}
+    {{ article.title }}
+{% endblock %}
+{% block "content" %}
+    <div class="article">
+        <div class="article-head">
+           <h1>{{ article.title }}</h1>
+             Категории: <a href="{% url 'category' article.category_id %}">{{ article.category }}</a>
+             <span class='pub-date'>{{ article.pub_date }}</span>
+         </div>
+        <div class="article-body">
+           <p>{{ article.body }}</p>
+            <a href="/"><span class="button big-button">Главная</span></a>
+        </div>
+        <hr>
+    </div>
+    <div id='recommend' class='block'>
+        <h3>Недавно опубликованные статьи:</h3>
+        {% for r in recommend %}
+        <a href="{% url 'article' r.id %}">
+            <div class='recommended_article'>
+                {{ r.title }}
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    <div class='block' id='comments'>
+        <img src="{% static 'img/comment-icon.png' %}" class="comment-ico"><h3>Комментариев: {{ count_comments }}</h3>
+        <hr>
+        {% if user.username %}
+        <form action="/comments/{{ article.id }}/" method="POST">
+            {% csrf_token %}
+            {{ form }}
+            <br>
+            <input type="submit" value='Отправить'>
+        </form>
+        {% else %}
+        <p>Для того чтобы оставлять комментарии вы должны авторизоваться</p>
+        {% endif %}
+        {% if comments %}
+            {% for comment in comments %}
+            <div class='commentary-block block' id='comment_{{ comment.id }}'>
+                <h4>
+                {% if comment.author.first_name or comment.author.last_name %}
+                    {{ comment.author.first_name }} {{ comment.author.last_name }}
+                {% else %}
+                    {{ comment.author }}
+                {% endif %}
+                </h4>
+                <h5>
+                 - {{ comment.patch_date }}
+                </h5>
+                {% if comment.author == user %}
+                <a href="{% url 'del_comments' comment.id %}"><span class='delete_comment'>[X]</span></a>
+                {% if comment.was_published_recently %}
+                <span id='update_{{ comment.id }}'>Редактировать</span>
+                <script>
+                    $(document).ready(function(){
+                        $('#update_{{ comment.id }}').click(function(){
+                            $('#form_{{ comment.id }}').toggle();
+                            $('#p_{{ comment.id }}').toggle();
+                        });
+                        var text = $('#p_{{ comment.id }}').text();
+                        $('div#comment_{{ comment.id }} textarea').text(text);
+                    });
+                </script>
+                <form action="/comments/{{ comment.id }}/update" method="POST" id='form_{{ comment.id }}'>
+                    {% csrf_token %}
+                    {{ form }}
+                    <br>
+                    <input type="submit" value='Отправить'>
+                </form>
+                {% endif %}
+                {% endif %}
+                <br>
+                <p id='p_{{ comment.id }}'>{{ comment.body }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class='commentary-block block'>
+            <p>
+            Комментарии отсутствуют
+            </p>
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}

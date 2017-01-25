@@ -1,0 +1,58 @@
+{% extends "loyout.html" %}
+{% load staticfiles %}
+{% block "content" %}
+    {% if latest_article_list %}
+        {% for article in latest_article_list %}
+          <div class="article">
+            <div class="article-head">
+               <h1><a href="{% url 'article' article.id %}">{{ article.title }}</a></h1>
+                 Категории: <a href="{% url 'category' article.category_id %}">{{ article.category }}</a>
+                <img src="{% static 'img/comment-icon.png' %}" class="comment-ico">
+                <a href="{% url 'article' article.id %}#comments">
+                Комментариев: {{ article.count_comments }}
+                </a>
+                <span class='pub-date'>{{ article.pub_date }}</span>
+             </div>
+            <div class="article-body">
+               <p>{{ article.body|truncatewords:"50" }}</p>
+                <a href="{% url 'article' article.id %}"><span class="button">Далее</span></a>
+            </div>
+            <hr>
+          </div>
+        {% endfor %}
+    {% endif %}
+    {% if category_id %}
+        {% if page.previous < 0 %}
+            {% if next_page %}
+            <a href="{% url 'category_page' num=page.next category_id=category_id %}"><span class="button big-button" id="next-page">Следующая страница</span></a>
+            {% endif %}
+        {% elif page.previous == 0 %}
+            <a href="{% url 'category' category_id %}"><span class="button back-button" id="next-page"><<  Предыдущая страница</span></a>
+            {% if next_page %}
+            <a href="{% url 'category_page' num=page.next category_id=category_id %}"><span class="button next-button" id="next-page">Следующая страница  >></span></a>
+            {% endif %}
+        {% else %}
+            <a href="{% url 'category_page' num=page.previous category_id=category_id %}"><span class="button back-button" id="next-page"><<  Предыдущая страница</span></a>
+            {% if next_page %}
+            <a href="{% url 'category_page' num=page.next category_id=category_id %}"><span class="button next-button" id="next-page">Следующая страница  >></span></a>
+            {% endif %}
+        {% endif %}
+    {% else %}
+        {% if page.previous < 0 %}
+            {% if next_page %}
+            <a href="{% url 'page' page.next %}"><span class="button big-button" id="next-page">Следующая страница</span></a>
+            {% endif %}
+        {% elif page.previous == 0 %}
+            <a href="{% url 'index' %}"><span class="button back-button" id="next-page"><<  Предыдущая страница</span></a>
+            {% if next_page %}
+            <a href="{% url 'page' page.next %}"><span class="button next-button" id="next-page">Следующая страница  >></span></a>
+            {% endif %}
+        {% else %}
+            <a href="{% url 'page' page.previous %}"><span class="button back-button" id="next-page"><<  Предыдущая страница</span></a>
+            {% if next_page %}
+            <a href="{% url 'page' page.next %}"><span class="button next-button" id="next-page">Следующая страница  >></span></a>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    
+{% endblock %}

@@ -1,0 +1,120 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block "title" %}Этот!Блог{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="shortcut icon" type="/images/png" href="{% static 'img/favicon.png' %}">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="{% static 'js/scroll.js' %}"></script>
+</head>
+<body>
+{% block "header" %}
+<header class="block">
+   <div class="container">
+        <div id="top-header" class="block">
+            <div id='search'>
+                <form action="https://www.google.ru/" method="GET">
+                    <input type="text" name='q' placeholder="Поиск в Google">
+                    <input type="submit" value="Поиск" class="submit-button">
+                </form>
+            </div>
+            <div id="logo">
+                <a href="/"><img src="{% static 'img/Logo.png' %}" alt="Логотип"></a>
+            </div>  
+            <div id="reg-auth">
+                {% if user.username %}
+                <a href="{% url 'logout' %}"><span>Выход</span></a>
+                {% if user.first_name %}
+                <span>{{ user.first_name }}</span>
+                {% else %}
+                <span>{{ user.username }}</span>
+                {% endif %}
+                {% else %}
+                <a href="{% url 'login' %}"><span>Авторизация</span></a>
+                <a href="{% url 'reg' %}"><span>Регистрация</span></a>
+                {% endif %}
+            </div>
+        </div>
+        <div id="menu" class="block">
+            <ul id="nav">
+                <a href="/"><li>Главная</li></a>
+                <a href="">
+                <li>Меню1
+                    <ul>
+                        <a href=""><li>Пункт1</li></a>
+                        <a href=""><li>Пункт2</li></a>
+                        <a href=""><li>Пункт3</li></a>
+                    </ul>
+                </li></a>
+                <a href=""><li>Меню2
+                    <ul>
+                        <a href=""><li>Пункт1</li></a>
+                        <a href=""><li>Пункт2</li></a>
+                        <a href=""><li>Пункт3</li></a>
+                        <a href=""><li>Пункт4</li></a>
+                        <a href=""><li>Пункт5</li></a>
+                    </ul>
+                </li></a>
+                <a href=""><li>Меню3
+                    <ul>
+                        <a href=""><li>Пункт1</li></a>
+                        <a href=""><li>Пункт2</li></a>
+                    </ul>
+                </li></a>
+            </ul> 
+        </div>
+   </div>    
+</header>
+{% endblock %}
+{% block "main" %}
+<div id="main" class="block">
+    <div class="container">
+        <div id="content" class="block">
+            <div id='left_col'>
+            {% block "content" %}
+                <div class="article">
+                   <div class="article-head">
+                       <h1>Заголовок</h1>
+                       Категории: <a href="">Категория</a>
+                       <img src="{% static 'img/comment-icon.png' %}" class="comment-ico">
+                       <a href="">Количество комментариев</a>
+                       <span class='pub-date'>Октябрь 23, 2016</span>
+                   </div>
+                   <div class="article-body">
+                       <p>При регистрации на сервисе у вас будут автоматически сняты ограничения проверки, предназначенные для гостей, и вы получите возможность проверять гораздо большее количество текстов с помощью нашего сервиса плагиат онлайн.</p>
+                       <a href="article.html"><span class="button">Далее</span></a>
+                   </div>
+                <hr>
+                </div>
+            {% endblock %}
+            </div>
+            <div id='right_col'>
+                <div id='commercial'>
+                    <img src="{% static 'img/commercial-head.png' %}" alt="Реклама">
+                </div>
+                <div id='category-list'>
+                    <ul>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block "footer" %}
+<footer class="block">
+    <div class="container">
+        <div id="footer-text" class="block">
+            <p>
+                2016&copy
+            </p>
+        </div>
+    </div>
+</footer>
+{% endblock %}
+<div id='scroll'></div>
+</body>
+</html>
